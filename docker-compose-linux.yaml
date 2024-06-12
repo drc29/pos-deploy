@@ -1,0 +1,65 @@
+version: '3.1'
+
+services:
+  api:
+    container_name: pos-api
+    image: iammrdm/laundry-pos:pos-admin
+    restart: always
+    ports:
+     - 8000:8000
+    volumes:
+      # - /etc/hosts:/etc/hosts
+      - ./.env:/opt/api/.env
+    privileged: true
+    depends_on:
+      - db
+    devices:
+      - /dev:/dev
+
+  cashier:
+    container_name: pos-cashier
+    image: iammrdm/laundry-pos:pos-cashier
+    restart: always
+    environment:
+      - "PORT=80"
+      - "GENERATE_SOURCEMAP=false"
+      - "REACT_APP_API_BASE_URL=http://pos-api.raspberrypi:8000/api"
+    ports:
+      - "8081:80"
+    # volumes:
+    #   - /etc/hosts:/etc/hosts
+    depends_on:
+      - api
+
+  management:
+    container_name: pos-management
+    image: iammrdm/laundry-pos:pos-management
+    restart: always
+    ports:
+      - "8082:80"
+    # volumes:
+    #   - /etc/hosts:/etc/hosts
+    #   - ./.env:/.env
+    depends_on:
+      - api
+
+  db:
+    container_name: pos-db
+    image: postgres:16
+    restart: always
+    environment:
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=postgres
+    ports:
+     - 5432:5432
+    volumes:
+     - ./docker-datas/pos-db:/var/lib/postgresql/data
+
+  admirer:
+    container_name: pos-db-management
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
