@@ -10,6 +10,8 @@ DJANGO_EMAIL=${3:-admin@exaple.co}
 DIRECTORY=${4:-pos}
 DB_DATA=${5:-docker-datas}
 
+SERVERIP=`ip a | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1`
+
 if [ "$DJANGO_USER" == "" ] || [ "$DJANGO_PASS" == "" ] ; then
     echo -e "parameter must not be empty"
     echo -e "there are times that the bootstrap will ask for the os password since it's needed."
@@ -125,7 +127,13 @@ docker exec pos-api python manage.py migrate
 echo "...create superuser"
 docker exec pos-api python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser(username='${DJANGO_USER}',email='${DJANGO_EMAIL}', password='${DJANGO_PASS}')"
 
+echo "...waiting for the system to come online"
+sleep 15
+
 echo "...initializing data"
 curl localhost:8000/api/initialize/data
+
+echo "................................"
+echo "You update the hosts file and add this ${SERVERIP} pos-api.local.co"
 
 exit 0
