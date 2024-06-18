@@ -82,6 +82,9 @@ echo "...login to docker registry"
 echo "..this will ask for username and password, check your password manager for the username and password"
 docker login
 
+echo "...copy the docker-compose-linux.yaml to $POS_DIRECTORY"
+cp ../docker-compose-linux.yaml $POS_DIRECTORY
+
 echo "...setup .env"
 cd $POS_DIRECTORY
 touch .env
@@ -101,11 +104,6 @@ PORT=80
 GENERATE_SOURCEMAP=false
 REACT_APP_API_BASE_URL=http://pos-api.raspberry.pi:8000/api
 EOF
-
-
-echo "...copy the docker-compose-linux.yaml to $POS_DIRECTORY"
-
-cp ../docker-compose-linux.yaml $POS_DIRECTORY
 
 echo "...checking if the file is on the $POS_DIRECTORY"
 ls -laht $POS_DIRECTORY
