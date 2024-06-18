@@ -116,10 +116,16 @@ echo "...starting the pos server"
 cd $POS_DIRECTORY
 docker compose -f docker-compose-linux.yaml up -d
 
+echo "...waiting to initialize properly"
+sleep 15
+
 echo "...running migration"
 docker exec pos-api python manage.py migrate
 
 echo "...create superuser"
 docker exec pos-api python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser(username='${DJANGO_USER}',email='${DJANGO_EMAIL}', password='${DJANGO_PASS}')"
+
+echo "...initializing data"
+curl localhost:8000/api/initialize/data
 
 exit 0
