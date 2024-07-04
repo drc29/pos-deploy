@@ -23,10 +23,18 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 Start-Sleep -Seconds 3;
 Write-Host "DoneVirtual Machine Platform"
 
-Write-Host "Enabling Microsoft-Hyper-V"
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
-Start-Sleep -Seconds 3;
-Write-Host "Done Microsoft-Hyper-V"
+$hyperv = Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-All -Online
+# Check if Hyper-V is enabled
+if($hyperv.State -eq "Enabled") {
+    Write-Host "Hyper-V is enabled."
+} else {
+    Write-Host "Hyper-V is disabled."
+    Write-Host "Enabling Microsoft-Hyper-V"
+    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+    Start-Sleep -Seconds 3;
+    Write-Host "Done Microsoft-Hyper-V"
+}
+
 Write-Host "Done Enabling Virtualization"
 
 
@@ -45,14 +53,30 @@ Start-Sleep -Seconds 5;
 - Input alphanumeric password: posadmin
 #>
 
-Write-Host "Downloading Ubuntu v24.04"
-Invoke-WebRequest -Uri https://cloud-images.ubuntu.com/wsl/releases/24.04/current/ubuntu-noble-wsl-amd64-wsl.rootfs.tar.gz -OutFile $ENV:HOMEDRIVE$ENV:HOMEPATH\Downloads\ubuntu-24.04-wsl.tar.gz -UseBasicParsing
-$ubuntu = "$ENV:HOMEDRIVE$ENV:HOMEPATH\Downloads\ubuntu-24.04-wsl.tar.gz"
-Write-Host "Finished Downloading Ubuntu-24.04"
 
-Write-Host "Creating POS Directory"
-mkdir c:\KyzenPOS
-Write-Host "Finished Creating Directory"
+$ubuntu = "$ENV:HOMEDRIVE$ENV:HOMEPATH\Downloads\ubuntu-24.04-wsl.tar.gz"
+$installer = (Test-Path $ubuntu -PathType Leaf)
+if ($installer -eq 'True') {
+    Write-Host "File already exists on $ubuntu"
+} else {
+    Write-Host "Downloading Ubuntu v24.04"
+    Invoke-WebRequest -Uri https://cloud-images.ubuntu.com/wsl/releases/24.04/current/ubuntu-noble-wsl-amd64-wsl.rootfs.tar.gz -OutFile $ubuntu -UseBasicParsing
+    Write-Host "Finished Downloading Ubuntu-24.04"
+}
+
+
+
+
+$folder = (Test-Path c:\KyzenPOS)
+if($folder -eq 'True') {
+    Write-Host "Directory already exists on $folder"
+} else {
+    Write-Host "Creating POS Directory"
+    mkdir c:\KyzenPOS
+    Write-Host "Finished Creating Directory"
+}
+
+
 wsl.exe --import Ubuntu-KyzenPOS C:\KyzenPOS $ubuntu
 Start-Sleep -Seconds 5;
 Write-Host "Done install Ubuntu-24.04"
@@ -70,11 +94,17 @@ Write-Host "Done Updating Distro"
 
 
 # Write-Host "installing USBIPD"
-Invoke-WebRequest -Uri https://github.com/dorssel/usbipd-win/releases/download/v4.2.0/usbipd-win_4.2.0.msi -OutFile $ENV:HOMEDRIVE$ENV:HOMEPATH\Downloads\usbipd-win_4.2.0.msi  -UseBasicParsing
 $usbipd = "$ENV:HOMEDRIVE$ENV:HOMEPATH\Downloads\usbipd-win_4.2.0.msi"
-Start-Process msiexec "/i $usbipd /qn";
-Write-Host "Done USBIPD"
-Start-Sleep -Seconds 3;
+$installerUSBIPD =  (Test-Path $usbipd -PathType Leaf)
+if ($installerUSBIPD -eq 'True') {
+    Write-Host "File already exists on $usbipd"
+} else {
+    Write-Host "Downloading Ubuntu v24.04"
+    Invoke-WebRequest -Uri https://github.com/dorssel/usbipd-win/releases/download/v4.2.0/usbipd-win_4.2.0.msi -OutFile $usbipd  -UseBasicParsing
+    Start-Process msiexec "/i $usbipd /norestart /qn" -Wait;
+    Write-Host "Done USBIPD"
+    Start-Sleep -Seconds 3;
+}
 
 # Start WSL Ubuntu
 Write-Host "Starting KyzenPos Server"
@@ -82,7 +112,7 @@ wsl -d Ubuntu-KyzenPOS --exec dbus-launch true
 Write-Host "Done starting KyzenPos Server"
 
 Write-Host "Getting printer busid"
-$printerBusId= ( usbipd list | Select-String -Pattern "Receipt"   | % { $_.Line.split(" ") | select -first 1 })
+$printerBusId= ( usbipd list | Select-String -Pattern "0fe6:811e"   | % { $_.Line.split(" ") | select -first 1 })
 Write-Host "Printer Busid: $printerBusId"
 Write-Host "Binding and Attaching printer to WSL"
 Write-Host "Binding....."

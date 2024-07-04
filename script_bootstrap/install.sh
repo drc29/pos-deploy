@@ -43,6 +43,7 @@ sudo apt-get update -y
 
 if [ -d "$POS_DIRECTORY" ]; then
     echo "$POS_DIRECTORY directory already exists. skipped"
+    sudo mkdir -p $POS_DIRECTORY
 else
     echo "...creating a directory: $POS_DIRECTORY"
     sudo mkdir -p $POS_DIRECTORY
@@ -50,6 +51,7 @@ fi
 
 if [ -d "$DB_DIRECTORY" ]; then
     echo "$DB_DIRECTORY directory already exists. skipped"
+    sudo mkdir -p $DB_DIRECTORY
 else
     echo "...creating a directory: $DB_DIRECTORY"
     sudo mkdir -p $DB_DIRECTORY
@@ -85,7 +87,7 @@ echo "..this will ask for username and password, check your password manager for
 docker login
 
 echo "...copy the docker-compose-linux.yaml to $POS_DIRECTORY"
-cp ../docker-compose-linux.yaml $POS_DIRECTORY
+cp /opt/pos-deploy/docker-compose-linux.yaml $POS_DIRECTORY
 
 echo "...setup .env"
 cd $POS_DIRECTORY
