@@ -104,6 +104,8 @@ if ($installerUSBIPD -eq 'True') {
     Start-Process msiexec "/i $usbipd /norestart /qn" -Wait;
     Write-Host "Done USBIPD"
     Start-Sleep -Seconds 3;
+    # $scriptToRun = "pos-install.ps1"
+    # Start-Process powershell -ArgumentList "-NoExit", "-File", $scriptToRun
 }
 
 # Start WSL Ubuntu
