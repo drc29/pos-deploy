@@ -18,3 +18,6 @@ pos-start.ps1 -> this needs to add on the windows startup so the wsl will run au
 
 install_pos.sh -> for installation of pos system on the wsl
 update_pos.sh -> updating docker images and pos on the wsl
+
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+Set-ExecutionPolicy -ExecutionPolicy Restricted
