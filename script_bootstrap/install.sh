@@ -93,8 +93,8 @@ touch .env
 cat <<EOF > .env
 EMAIL_USE_TLS=True
 EMAIL_HOST=smtp-relay.brevo.com
-EMAIL_HOST_USER=imrmendez@oceanhiveph.com
-EMAIL_HOST_PASSWORD=xsmtpsib-14b46701c99c4012040c80a19c95e886ab9cedcad9ed8a9b7ec3fa268e63284c-MvkpfRVxjZy713b8
+EMAIL_HOST_USER=changethis
+EMAIL_HOST_PASSWORD=changeThis
 EMAIL_PORT=587
 DJANGO_SECRET_KEY=django-insecure-o6y%+=3ib=ic&u3(krj%x8zn8-ma=@3_q^sib=_!tb3y4l8@i@
 DJANGO_DATABASE_HOST=pos-db
