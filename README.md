@@ -10,3 +10,11 @@
 - Then run the pos-install.ps1 again
 - It will ask for the docker credentials, please refer on your password manager
 - Wait till the installation is complete
+- 
+
+pos-install.ps1 -> this will install all necessary files on the machine, it must run on windows powershell cli
+pos-update.ps1 -> this will update the docker images, it must run on windows powershell cli
+pos-start.ps1 -> this needs to add on the windows startup so the wsl will run automatically
+
+install_pos.sh -> for installation of pos system on the wsl
+update_pos.sh -> updating docker images and pos on the wsl
