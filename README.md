@@ -20,4 +20,5 @@ install_pos.sh -> for installation of pos system on the wsl
 update_pos.sh -> updating docker images and pos on the wsl
 
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+
 Set-ExecutionPolicy -ExecutionPolicy Restricted
