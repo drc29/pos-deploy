@@ -126,8 +126,8 @@ sleep 15
 echo "...running migration"
 docker exec pos-api python manage.py migrate
 
-echo "...create superuser"
-docker exec pos-api python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser(username='${DJANGO_USER}',email='${DJANGO_EMAIL}', password='${DJANGO_PASS}')"
+# echo "...create superuser"
+# docker exec pos-api python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser(username='${DJANGO_USER}',email='${DJANGO_EMAIL}', password='${DJANGO_PASS}')"
 
 echo "...waiting for the system to come online"
 sleep 15
