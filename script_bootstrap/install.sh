@@ -84,7 +84,7 @@ echo "... please restart the terminal in order for it to work"
 
 echo "...login to docker registry"
 echo "..this will ask for username and password, check your password manager for the username and password"
-docker login
+docker login registry.gitlab.com
 
 echo "...copy the docker-compose-linux.yaml to $POS_DIRECTORY"
 cp /opt/pos-deploy/docker-compose-linux.yaml $POS_DIRECTORY

@@ -1,7 +1,7 @@
 services:
   api:
     container_name: pos-api
-    image: iammrdm/laundry-pos:pos-admin
+    image: registry.gitlab.com/drc29/pos-super-admin:latest
     restart: always
     ports:
      - 8000:8000
@@ -16,7 +16,7 @@ services:
 
   cashier:
     container_name: pos-cashier
-    image: iammrdm/laundry-pos:pos-cashier
+    image: registry.gitlab.com/drc29/pos-cashier:latest
     restart: always
     environment:
       - "PORT=80"
@@ -31,7 +31,7 @@ services:
 
   management:
     container_name: pos-management
-    image: iammrdm/laundry-pos:pos-management
+    image: registry.gitlab.com/drc29/pos-management:latest
     restart: always
     ports:
       - "8082:80"
@@ -61,3 +61,16 @@ services:
       - 8080:8080
     depends_on:
       - db
+
+  pos_web:
+    container_name: pos_web
+    image: nginx:1.24.0
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    # volumes:
+    #   - /etc/letsencrypt/live/pos-api.kyzen.ph/fullchain.pem:/etc/letsencrypt/live/pos-api.kyzen.ph/fullchain.pem
+    #   - /etc/letsencrypt/live/pos-api.kyzen.ph/privkey.pem:/etc/letsencrypt/live/pos-api.kyzen.ph/privkey.pem
+    #   - /etc/hosts:/etc/hosts
+    #   - ./nginx.conf/:/etc/nginx/conf.d/
